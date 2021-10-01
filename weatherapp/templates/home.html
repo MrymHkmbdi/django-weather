@@ -1,56 +1,62 @@
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Django Weather App</title>
     <style>
-        .whole
-        {
-            {#margin-left: 20%;#}
-            border: 1px solid black;
+        * {
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+        }
+
+        #main {
             text-align: center;
-            font-family: sans-serif;
-        }
-        .form
-        {
-            border: 1px solid black;
-            margin: 2%;
+            padding-top: 100px;
         }
 
-        .city
-        {
-            height: 50px;
-            width: 200px;
-            padding: 10px;
+        h1 {
+            margin-bottom: 20px;
         }
 
-        .submit
-        {
-            height: 35px;
-            width: 200px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            margin-top: 10px;
+        input[type='text'] {
+            width: 30%;
             margin-bottom: 10px;
+            padding: 10px;
+            border: 2px solid black;
+        }
+
+        input[type='submit'] {
+            width: 30%;
+            padding: 5px;
+            background: black;
+            color: white;
             text-transform: uppercase;
         }
-
-        form
-        {
-            margin-bottom: 10px;
+        form {
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-       <div>
-            <h1>Find The Weather</h1>
-            <form method="get"></form>
-                <label for="city"></label>
-                <input type="text" class="city" id="city" value="{{ request.Get.city }}" placeholder="CITY ..."><br>
-                <input type="submit" value="submit" class="submit">
-            </form>
-         {% if weather %}
-                <h3>{{ weather.region }}</h3>
-                <h3>{{ weather.day_time }}</h3>
-                <h3>{{ weather.weather }}</h3>
-                <h3>{{ weather.temprature }}</h3>
-         {% endif %}
-       </div>
-
+<div id="main">
+    <h1>Find the Weather</h1>
+    <form method="get">
+        <div>
+            <label for="city"></label>
+            <input type="text" id="city" value="{{ request.GET.city }}" placeholder="City..." name="city"/>
+        </div>
+        <input type="submit" value="Submit"/>
+    </form>
+    {% if result %}
+        <h3>{{ result.region }}</h3>
+        <h3>{{ result.day_time }}</h3>
+        <h3>{{ result.temp_now }}</h3>
+        <h3>{{ result.weather_now }}</h3>
+    {% endif %}
+</div>
 </body>
+</html>

@@ -1,31 +1,36 @@
-from django.http import HttpResponse
 from django.shortcuts import render
-from bs4 import BeautifulSoup
-import requests
 
 
-def get_html_content(city):
-    USER_AGENT = 'Chrome/44.0.2403.157'
-    LANGUAGE = 'en-US; en; q = 0.5'
+# Create your views here.
+
+
+def get_html_content(request):
+    import requests
+    city = request.GET.get('city')
+    city = city.replace(" ", "+")
+    USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"
+    LANGUAGE = "en-US,en;q=0.5"
     session = requests.Session()
     session.headers['User-Agent'] = USER_AGENT
     session.headers['Accept-Language'] = LANGUAGE
     session.headers['Content-Language'] = LANGUAGE
-    city = city.replace('', '+')
-    html_content = session.get('https://www.google.com/search?q=weather+in+{}'.format(city)).text
+    html_content = session.get(f'https://www.google.com/search?q=weather+{city}').text
     return html_content
 
 
 def home(request):
-    weather_data = None
+    result = None
     if 'city' in request.GET:
-        city = request.GET.get('city')
-        html_content = get_html_content(city)
+        # fetch the weather from Google.
+        html_content = get_html_content(request)
+        from bs4 import BeautifulSoup
         soup = BeautifulSoup(html_content, 'html.parser')
-        weather_data = dict()
-        weather_data['region'] = soup.find('div', attrs={'id':'wob_loc'}).text
-        weather_data['day_time'] = soup.find('div', attrs={'id': 'dts'}).text
-        weather_data['weather'] = soup.find('span', attrs={'id': 'wob_dcp'}).text
-        weather_data['temperature'] = soup.find('span', attrs={'id': 'wob_t'}).text
-    print(weather_data)
-    return render(request, 'home.html', {'weather': weather_data})
+        result = dict()
+        # extract region
+        result['region'] = soup.find("span", attrs={"class": "BNeawe tAd8D AP7Wnd"}).text
+        # extract temperature now
+        result['temp_now'] = soup.find("div", attrs={"class": "BNeawe iBp4i AP7Wnd"}).text
+        # get the day, hour and actual weather
+        result['day_time'], result['weather_now'] = soup.find("div", attrs={"class": "BNeawe tAd8D AP7Wnd"}).text.split(
+            '\n')
+    return render(request, 'home.html', {'result': result})
