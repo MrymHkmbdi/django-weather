@@ -1,0 +1,56 @@
+<head>
+    <style>
+        .whole
+        {
+            {#margin-left: 20%;#}
+            border: 1px solid black;
+            text-align: center;
+            font-family: sans-serif;
+        }
+        .form
+        {
+            border: 1px solid black;
+            margin: 2%;
+        }
+
+        .city
+        {
+            height: 50px;
+            width: 200px;
+            padding: 10px;
+        }
+
+        .submit
+        {
+            height: 35px;
+            width: 200px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        form
+        {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+       <div>
+            <h1>Find The Weather</h1>
+            <form method="get"></form>
+                <label for="city"></label>
+                <input type="text" class="city" id="city" value="{{ request.Get.city }}" placeholder="CITY ..."><br>
+                <input type="submit" value="submit" class="submit">
+            </form>
+         {% if weather %}
+                <h3>{{ weather.region }}</h3>
+                <h3>{{ weather.day_time }}</h3>
+                <h3>{{ weather.weather }}</h3>
+                <h3>{{ weather.temprature }}</h3>
+         {% endif %}
+       </div>
+
+</body>
